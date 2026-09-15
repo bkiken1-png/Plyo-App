@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Speed & Agility">
+<title>12-Week Speed & Agility Program</title>
+<style>
+  :root{
+    --turf-900:#0F2419;
+    --turf-800:#173626;
+    --turf-700:#204a33;
+    --chalk:#F3F1E7;
+    --chalk-dim:#B9C2B7;
+    --amber:#E7A93C;
+    --amber-dim:#8a6a2b;
+    --line:#2E4C3A;
+    --f1:#3E8A6B;
+    --f2:#3C6FA8;
+    --f3:#B4472F;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--turf-900);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 48px);
+    color:var(--chalk);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    min-height:100vh;
+    padding-bottom:40px;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:18px 16px 0;}
+
+  /* Header */
+  .hdr{padding:6px 2px 18px;}
+  .eyebrow{
+    font-size:11px; letter-spacing:0.14em; color:var(--amber);
+    font-weight:700; margin-bottom:6px;
+  }
+  h1{font-size:22px; line-height:1.25; margin:0 0 4px; font-weight:800; letter-spacing:-0.01em;}
+  .sub{color:var(--chalk-dim); font-size:13px; margin:0;}
+
+  /* Week dial */
+  .dial{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--turf-800); border:1px solid var(--line); border-radius:14px;
+    padding:14px 16px; margin-top:18px;
+  }
+  .dial button{
+    width:38px;height:38px;border-radius:10px;border:1px solid var(--line);
+    background:var(--turf-700); color:var(--chalk); font-size:18px; font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .dial button:active{background:var(--amber-dim);}
+  .dial-center{text-align:center;}
+  .dial-week{font-size:26px;font-weight:800;letter-spacing:-0.02em;}
+  .dial-phase{
+    font-size:11px; font-weight:700; letter-spacing:0.06em; margin-top:2px;
+    padding:3px 10px; border-radius:20px; display:inline-block;
+  }
+
+  /* Progress bar */
+  .progress-row{display:flex; align-items:center; gap:10px; margin-top:14px;}
+  .progress-track{flex:1; height:8px; background:var(--turf-800); border-radius:6px; overflow:hidden; border:1px solid var(--line);}
+  .progress-fill{height:100%; background:var(--amber); border-radius:6px; transition:width .3s ease;}
+  .progress-label{font-size:11px; color:var(--chalk-dim); white-space:nowrap;}
+
+  /* Session tabs */
+  .tabs{display:flex; gap:8px; margin:20px 0 14px;}
+  .tab{
+    flex:1; text-align:center; padding:11px 0; border-radius:10px;
+    background:var(--turf-800); border:1px solid var(--line);
+    font-size:13px; font-weight:700; color:var(--chalk-dim);
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .tab.active{background:var(--turf-700); color:var(--chalk); border-color:var(--amber-dim);}
+  .tab .check{font-size:10px; color:var(--amber); font-weight:800;}
+
+  /* Section card */
+  .section{
+    background:var(--turf-800); border:1px solid var(--line); border-radius:14px;
+    margin-bottom:12px; overflow:hidden;
+  }
+  .section-head{
+    padding:10px 14px; font-size:11.5px; font-weight:800; letter-spacing:0.04em;
+    color:var(--turf-900); display:flex; justify-content:space-between;
+  }
+  .ex{
+    padding:12px 14px; border-top:1px solid var(--line);
+    display:flex; align-items:flex-start; gap:12px;
+  }
+  .ex:first-of-type{border-top:none;}
+  .ex.done{opacity:0.45;}
+  .ex-check{
+    width:22px;height:22px;border-radius:7px;border:2px solid var(--chalk-dim);
+    flex-shrink:0; margin-top:1px; display:flex;align-items:center;justify-content:center;
+    font-size:14px; font-weight:900;
+  }
+  .ex-check.checked{background:var(--amber); border-color:var(--amber); color:var(--turf-900);}
+  .ex-body{flex:1;}
+  .ex-name{font-size:14px; font-weight:700; margin:0 0 2px;}
+  .ex-name.done{text-decoration:line-through;}
+  .ex-detail{font-size:12px; color:var(--chalk-dim); margin:0;}
+  .ex-note{font-size:11.5px; color:var(--chalk-dim); font-style:italic; margin:4px 0 0;}
+  .ex-link{
+    display:inline-block; margin-top:6px; font-size:12px; font-weight:700;
+    color:var(--amber); text-decoration:none; border-bottom:1px solid var(--amber-dim);
+  }
+
+  /* Progression note */
+  .prog-note{
+    background:var(--turf-800); border:1px solid var(--line); border-left:4px solid var(--amber);
+    border-radius:10px; padding:12px 14px; margin:18px 0 10px; font-size:13px; line-height:1.5;
+  }
+  .prog-note b{color:var(--amber);}
+
+  /* Complete button */
+  .complete-btn{
+    width:100%; padding:15px; border-radius:12px; border:none; margin-top:10px;
+    font-size:15px; font-weight:800; letter-spacing:0.02em;
+    background:var(--amber); color:var(--turf-900);
+  }
+  .complete-btn.done{background:var(--turf-700); color:var(--chalk-dim); border:1px solid var(--line);}
+
+  .footer-note{text-align:center; font-size:11px; color:var(--chalk-dim); margin-top:22px; opacity:0.7;}
+
+  @media (prefers-reduced-motion: reduce){ * { transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="eyebrow">ATHLETIC DEVELOPMENT PLAN</div>
+    <h1>Speed, Agility &amp; Plyometric Program</h1>
+    <p class="sub">Basketball &amp; Baseball &middot; Ages 11&ndash;13</p>
+  </div>
+
+  <div class="dial">
+    <button id="prevWeek" aria-label="Previous week">&#8592;</button>
+    <div class="dial-center">
+      <div class="dial-week" id="weekLabel">Week 1</div>
+      <div class="dial-phase" id="phaseLabel">FOUNDATION</div>
+    </div>
+    <button id="nextWeek" aria-label="Next week">&#8594;</button>
+  </div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="overallFill" style="width:0%"></div></div>
+    <div class="progress-label" id="overallLabel">0 / 24 sessions</div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div id="sections"></div>
+
+  <div class="prog-note" id="progNote"></div>
+
+  <button class="complete-btn" id="completeBtn">Mark Session Complete</button>
+
+  <div class="footer-note" id="footerNote">Progress saves automatically on this device.</div>
+</div>
+
+<script>
+const PHASE_COLORS = {1:"#3E8A6B", 2:"#3C6FA8", 3:"#B4472F"};
+const PHASE_NAMES = {1:"FOUNDATION", 2:"BUILD", 3:"PEAK"};
+
+function phaseFor(week){ if(week<=4) return 1; if(week<=8) return 2; return 3; }
+
+const SECTIONS = {
+  1: [
+    {title:"WARM-UP · 5 MIN", ex:[
+      {name:"High knees, butt kicks, walking lunges, lateral shuffles", detail:"2 rounds x 15–20 yds each", note:"Dynamic warm-up"}
+    ]},
+    {title:"SPRINT MECHANICS · 7 MIN", ex:[
+      {name:"A-Skips", detail:"2 x 15 yds", link:"https://www.youtube.com/watch?v=5lErHz17GII"},
+      {name:"Acceleration Sprints", detail:"3 x 15 yds, walk-back recovery", note:"Focus on drive phase"}
+    ]},
+    {title:"REACTIVE AGILITY · 10 MIN", ex:[
+      {name:"Mirror Drill", detail:"3 x 15 sec", note:"Face a partner, shuffle & react — stay square"},
+      {name:"Partner Reaction Sprints", detail:"4 reps x 10 yds", note:"Partner points, athlete reacts"}
+    ]},
+    {title:"CHANGE OF DIRECTION · 5 MIN", ex:[
+      {name:"5-10-5 Pro Agility Shuttle", detail:"2 reps — technique focus, not for time", link:"https://www.youtube.com/watch?v=fZoJVVuqY3U"}
+    ]},
+    {title:"PLYOMETRICS · 5 MIN", ex:[
+      {name:"Pogo Hops", detail:"2 x 10 sec", link:"https://www.youtube.com/watch?v=c2LBofIzUqs"},
+      {name:"Squat Jumps", detail:"2 x 5", link:"https://www.youtube.com/watch?v=eulO9KsPRFA"},
+      {name:"Broad Jumps", detail:"2 x 4", link:"https://www.youtube.com/watch?v=7Du1KbwCdUk"}
+    ]}
+  ],
+  2: [
+    {title:"WARM-UP · 5 MIN", ex:[
+      {name:"Same as Phase 1", detail:"2 rounds x 15–20 yds each"}
+    ]},
+    {title:"SPRINT MECHANICS · 7 MIN", ex:[
+      {name:"A-Skips", detail:"2 x 15 yds", link:"https://www.youtube.com/watch?v=5lErHz17GII"},
+      {name:"B-Skips (new)", detail:"2 x 15 yds", link:"https://www.youtube.com/watch?v=AKz9ami0Qp4"},
+      {name:"Acceleration Sprints", detail:"4 x 20 yds"}
+    ]},
+    {title:"REACTIVE AGILITY · 11 MIN", ex:[
+      {name:"Mirror Drill", detail:"4 x 20 sec"},
+      {name:"Ball-Drop Reaction Sprint (new)", detail:"5 reps", note:"Drop ball chest-high, sprint to catch before 2nd bounce"},
+      {name:"Partner Reaction Sprints", detail:"5 reps, mixed directions"}
+    ]},
+    {title:"CHANGE OF DIRECTION · 7 MIN", ex:[
+      {name:"5-10-5 Pro Agility Shuttle", detail:"3 reps — now for time", link:"https://www.youtube.com/watch?v=fZoJVVuqY3U"},
+      {name:"Cone Cut Drill", detail:"3 reps each direction", note:"45° plant-and-cut, cones 5 yds apart"}
+    ]},
+    {title:"PLYOMETRICS · 6 MIN", ex:[
+      {name:"Lateral Bounds (stick landing)", detail:"2 x 5 each side", link:"https://www.youtube.com/watch?v=niEGdFUQ6sY"},
+      {name:"Box Jumps (12–18\" box)", detail:"2 x 5", link:"https://www.youtube.com/watch?v=3INzGHuk23U"},
+      {name:"Broad Jumps", detail:"2 x 5", link:"https://www.youtube.com/watch?v=7Du1KbwCdUk"}
+    ]}
+  ],
+  3: [
+    {title:"WARM-UP · 4–5 MIN", ex:[
+      {name:"Same as prior phases", detail:"Can shorten slightly — he's more efficient now"}
+    ]},
+    {title:"SPRINT MECHANICS · 6 MIN", ex:[
+      {name:"A-Skips (maintenance)", detail:"1 x 15 yds", link:"https://www.youtube.com/watch?v=5lErHz17GII"},
+      {name:"Acceleration Sprints", detail:"4 x 25–30 yds"},
+      {name:"Flying Sprints (new)", detail:"2 reps", note:"Jog 10 yds, build into a 15-yd all-out sprint"}
+    ]},
+    {title:"REACTIVE AGILITY · 11 MIN", ex:[
+      {name:"Mirror Drill", detail:"4 x 20 sec"},
+      {name:"Ball-Drop Reaction Sprint", detail:"5 reps"},
+      {name:"Live Reaction Shuffle-to-Sprint (new)", detail:"5 reps", note:"Coach calls “shuffle” or “sprint” mid-rep"}
+    ]},
+    {title:"CHANGE OF DIRECTION · 7 MIN", ex:[
+      {name:"5-10-5 Pro Agility Shuttle", detail:"3 reps — for time, track progress", link:"https://www.youtube.com/watch?v=fZoJVVuqY3U"},
+      {name:"Cone Cut Drill", detail:"4 reps each direction"},
+      {name:"Closeout-and-Cut (new)", detail:"Live reps", note:"Coach closes out like a defender; athlete cuts & sprints"}
+    ]},
+    {title:"PLYOMETRICS · 6 MIN", ex:[
+      {name:"Lateral Bounds", detail:"2 x 6 each side", link:"https://www.youtube.com/watch?v=niEGdFUQ6sY"},
+      {name:"Box Jumps", detail:"2 x 6", link:"https://www.youtube.com/watch?v=3INzGHuk23U"},
+      {name:"Broad Jumps (track distance)", detail:"2 x 5", link:"https://www.youtube.com/watch?v=7Du1KbwCdUk"}
+    ]}
+  ]
+};
+
+const PROGRESSION = {
+  1:"Walk through every drill slowly — technique only.",
+  2:"Same volume, add slight speed and intent.",
+  3:"Add 1 rep to sprints and reaction drills.",
+  4:"Light deload — same drills at ~75% volume before Phase 2.",
+  5:"Introduce new drills at moderate effort.",
+  6:"Increase sprint distance to 25 yds, add a rep to the shuttle.",
+  7:"Full intensity — highest-volume week of this phase.",
+  8:"Light deload (~75% volume) before Phase 3.",
+  9:"Introduce flying sprints & live reaction drill at moderate effort.",
+  10:"Full intensity — all drills at game speed.",
+  11:"Peak week — best effort across every drill; re-test 5-10-5 time and broad jump vs. Week 1.",
+  12:"Taper — light session (~60% volume), prioritize freshness for basketball season."
+};
+
+let state = { week: 1, day: "mon", checks: {} };
+let persistMode = "none"; // "claude" | "local" | "none"
+
+function storageKey(){ return "training-app-state"; }
+
+async function loadState(){
+  // Prefer Claude's storage API when running inside a Claude conversation.
+  if(typeof window.storage !== "undefined" && window.storage !== null){
+    try{
+      const res = await window.storage.get(storageKey(), false);
+      if(res && res.value){
+        state = Object.assign(state, JSON.parse(res.value));
+      }
+      persistMode = "claude";
+      render();
+      return;
+    }catch(e){ /* fall through to localStorage */ }
+  }
+  // Standalone (e.g. added to iPhone home screen) — use localStorage.
+  try{
+    const raw = window.localStorage.getItem(storageKey());
+    if(raw){ state = Object.assign(state, JSON.parse(raw)); }
+    persistMode = "local";
+  }catch(e){
+    persistMode = "none";
+    const fn = document.getElementById("footerNote");
+    if(fn) fn.textContent = "Progress won't be saved in this environment.";
+  }
+  render();
+}
+
+async function saveState(){
+  if(persistMode === "claude"){
+    try{ await window.storage.set(storageKey(), JSON.stringify(state), false); }
+    catch(e){ /* ignore */ }
+  } else if(persistMode === "local"){
+    try{ window.localStorage.setItem(storageKey(), JSON.stringify(state)); }
+    catch(e){ /* ignore */ }
+  }
+}
+
+function exKey(week, day, sIdx, eIdx){ return `w${week}-${day}-${sIdx}-${eIdx}`; }
+
+function isSessionComplete(week, day){
+  const phase = phaseFor(week);
+  const secs = SECTIONS[phase];
+  for(let s=0; s<secs.length; s++){
+    for(let e=0; e<secs[s].ex.length; e++){
+      if(!state.checks[exKey(week, day, s, e)]) return false;
+    }
+  }
+  return true;
+}
+
+function countCompletedSessions(){
+  let count = 0;
+  for(let w=1; w<=12; w++){
+    if(isSessionComplete(w,"mon")) count++;
+    if(isSessionComplete(w,"thu")) count++;
+  }
+  return count;
+}
+
+function render(){
+  const phase = phaseFor(state.week);
+  const color = PHASE_COLORS[phase];
+
+  document.getElementById("weekLabel").textContent = "Week " + state.week;
+  const pl = document.getElementById("phaseLabel");
+  pl.textContent = PHASE_NAMES[phase];
+  pl.style.background = color + "33";
+  pl.style.color = color;
+
+  document.getElementById("prevWeek").style.visibility = state.week === 1 ? "hidden" : "visible";
+  document.getElementById("nextWeek").style.visibility = state.week === 12 ? "hidden" : "visible";
+
+  // Tabs
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  ["mon","thu"].forEach(day=>{
+    const done = isSessionComplete(state.week, day);
+    const tab = document.createElement("div");
+    tab.className = "tab" + (state.day===day ? " active":"");
+    tab.innerHTML = `<div>${day==="mon"?"Monday":"Thursday"}</div><div class="check">${done?"✓ DONE":""}</div>`;
+    tab.onclick = () => { state.day = day; render(); };
+    tabs.appendChild(tab);
+  });
+
+  // Sections
+  const secWrap = document.getElementById("sections");
+  secWrap.innerHTML = "";
+  SECTIONS[phase].forEach((sec, sIdx)=>{
+    const card = document.createElement("div");
+    card.className = "section";
+    const head = document.createElement("div");
+    head.className = "section-head";
+    head.style.background = color;
+    head.style.color = "#0F2419";
+    head.textContent = sec.title;
+    card.appendChild(head);
+
+    sec.ex.forEach((ex, eIdx)=>{
+      const k = exKey(state.week, state.day, sIdx, eIdx);
+      const checked = !!state.checks[k];
+      const row = document.createElement("div");
+      row.className = "ex" + (checked ? " done":"");
+
+      const box = document.createElement("div");
+      box.className = "ex-check" + (checked ? " checked":"");
+      box.textContent = checked ? "✓" : "";
+      box.onclick = () => {
+        state.checks[k] = !state.checks[k];
+        saveState();
+        render();
+      };
+
+      const body = document.createElement("div");
+      body.className = "ex-body";
+      let html = `<p class="ex-name${checked?' done':''}">${ex.name}</p><p class="ex-detail">${ex.detail}</p>`;
+      if(ex.note) html += `<p class="ex-note">${ex.note}</p>`;
+      if(ex.link) html += `<a class="ex-link" href="${ex.link}" target="_blank" rel="noopener">▶ Watch demo</a>`;
+      body.innerHTML = html;
+
+      row.appendChild(box);
+      row.appendChild(body);
+      card.appendChild(row);
+    });
+
+    secWrap.appendChild(card);
+  });
+
+  document.getElementById("progNote").innerHTML = `<b>Week ${state.week}:</b> ${PROGRESSION[state.week]}`;
+
+  const btn = document.getElementById("completeBtn");
+  const complete = isSessionComplete(state.week, state.day);
+  btn.textContent = complete ? "✓ Session Complete" : "Mark Session Complete";
+  btn.className = "complete-btn" + (complete ? " done":"");
+  btn.onclick = () => {
+    const phase2 = phaseFor(state.week);
+    const secs = SECTIONS[phase2];
+    const anyUnchecked = secs.some((sec,sIdx)=>sec.ex.some((ex,eIdx)=>!state.checks[exKey(state.week,state.day,sIdx,eIdx)]));
+    secs.forEach((sec,sIdx)=>sec.ex.forEach((ex,eIdx)=>{
+      state.checks[exKey(state.week,state.day,sIdx,eIdx)] = anyUnchecked ? true : false;
+    }));
+    saveState();
+    render();
+  };
+
+  // Overall progress
+  const done = countCompletedSessions();
+  document.getElementById("overallFill").style.width = (done/24*100) + "%";
+  document.getElementById("overallLabel").textContent = `${done} / 24 sessions`;
+}
+
+document.getElementById("prevWeek").onclick = () => { if(state.week>1){ state.week--; saveState(); render(); } };
+document.getElementById("nextWeek").onclick = () => { if(state.week<12){ state.week++; saveState(); render(); } };
+
+loadState();
+</script>
+</body>
+</html>
