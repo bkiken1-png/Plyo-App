@@ -1,2 +1,0 @@
-# Plyo-App
-Training
